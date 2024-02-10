@@ -1,1 +1,0 @@
-# InfinityIntegral.github.io
