@@ -89,8 +89,21 @@
 			<h1>the way of Juche:</h1>
 			<h1>a guide to self-studying</h1>
 			<p>
-				I made this page as people often ask me how I improved in Math Olympiad. (This is not a Korean spy website, if not I would have all the questions from them already and will not have to ask you for them) I uploaded all my notes here with some links to other useful resources. Notes from RIMC (the Math Club of a top school in Singapore) and SIMO (basically Singapore's National Team) are private pages and can only be viewed with special permission from me. These notes are much more advanced.
+				I made this page as people often ask me how I improved in Math Olympiad. I uploaded all my notes here with some links to other useful resources. Notes from RIMC (the Math Club of a top school in Singapore) and SIMO (basically Singapore's National Team) are private pages, these notes are more advanced and are available to Singaporean students only.
 			</p>
+			<p id="SG-filter">
+				
+			</p>
+			<script>
+				let x = 0;
+				function json(url) {
+					return fetch(url).then(res => res.json());
+				}
+				json("https://api.ipdata.co?api-key=1ece09bc74360b791cc45ab6e24fcd97ddcbeed150880ca166df3ff3").then(data => {
+					if(data.country_code == 'SG'){x = 1;}
+				});
+				if (x==1){document.getElementById("SG-filter").innerHTML = 'Since you are a Singaporean student, you are able to see the notes, and similar to other notes posted on this page, they are PDF files. <br/><a href="https://drive.google.com/drive/folders/1-0QleNz7-_x3g1PF8J6o6deDgbk8ksXh">RIMC notes</a><br/><a href="https://drive.google.com/drive/folders/1-3H0uoVkq5GWtPumoxQQB9-FWwkFWhLe">SIMO notes</a><br/>I have not yet uploaded the notes for SIMO Senior and will do so in future.';}
+			</script>
 			<p>
 				<a href="https://en.m.wikipedia.org/wiki/Juche">Juche</a> is the name of a Korean political ideology emphasising on self-reliance and independence. This describes how I improved at Math Olympiad without having any tuition. I uploaded all the Math Olympiad notes that I received or made for easy reference. However, you should not blindly follow the way of Juche as <a href="https://blog.evanchen.cc/2019/01/31/math-contest-platitudes-v3/">Evan Chen disapproves</a>.
 			</p>
@@ -102,7 +115,7 @@
 			</p>
 			<br/><br/><br/>
 			<p>
-				If you are from Singapore, you have access to the private pages containing RIMC and SIMO notes. Message me on Instagram for the link. Note that everything in private pages cannot be reposted on the Internet or be shared with people who do not have access. Below is a diagram showing the selection process for SIMO and the final Singapore Team.
+				If you are from Singapore, you have access to the private pages containing RIMC and SIMO notes. Note that everything in private pages cannot be reposted on the Internet or be shared with people who do not have access. Below is a diagram showing the selection process for SIMO and the final Singapore Team.
 			</p>
 			<img src="SIMO-selection.png"/>
 			<p>
