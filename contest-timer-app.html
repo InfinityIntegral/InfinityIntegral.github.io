@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-SU">
+	<head>
+		<meta charset="utf-8">
+		<title>contest timer</title>
+		<script type="text/javascript" src="CanvasInput.js"></script>
+		<link rel="icon" type="image/x-icon" href="favicon.ico"></link>
+		<style>
+			body{
+				background-color: #FF00C8;
+				color: #00C8FF;
+				font-family: "Arial";
+				overflow: scroll;
+				line-height: 1.2;
+				vertical-align: baseline;
+       	     }
+		</style>
+	</head>
+	<body>
+		<audio src="music2.mp3" preload = "auto" hidden = true id = "song"></audio>
+		<canvas style="width:100%;height:window.innerHeight" id="x"></canvas>
+		<script>
+			const k = document.getElementById("x");
+			const draw = document.getElementById("x").getContext("2d");
+			let setname, settime;
+			let h0, m0, s0, h1, m1, s1, disp, c0, c1;
+			let submitted = 0;
+			draw.canvas.width = window.innerWidth;
+			draw.canvas.height = window.innerHeight;
+			const w = draw.canvas.width;
+			const h = draw.canvas.height;
+			var playsound = document.getElementById("song");
+
+			function userinput(){
+				// input page
+
+				draw.font = "50px Arial";
+				draw.textAlign = "center";
+				draw.fillStyle = "#00C8FF";
+				draw.fillText("contest timer", w/2, h/4);
+				
+				draw.font = "30px Arial";
+				draw.fillText("contest name:", w/2, h/2);
+				draw.fillText("duration in minutes:", w/2, h/2 + 80);
+
+				let contestname = new CanvasInput({
+					canvas: k,
+					x: w/2 - 200,
+					y: h/2 + 12,
+					fontSize: 30,
+					fontColor: "#FF00C8",
+					width: 400,
+					height: 30,
+					padding: 5,
+					borderWidth: 0,
+					borderRadius: 0,
+					backgroundColor: "#00C8FF",
+					boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+					innerShadow: "0px 0px 0px rgba(0,0,0,0)",
+					selectionColor: "rgba(255,0,200,0.5)"
+				});
+
+				let contesttime = new CanvasInput({
+					canvas: k,
+					x: w/2 - 200,
+					y: h/2 + 90,
+					fontSize: 30,
+					fontColor: "#FF00C8",
+					width: 400,
+					height: 30,
+					padding: 5,
+					borderWidth: 0,
+					borderRadius: 0,
+					backgroundColor: "#00C8FF",
+					boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+					innerShadow: "0px 0px 0px rgba(0,0,0,0)",
+					selectionColor: "rgba(255,0,200,0.5)"
+				});
+
+				draw.fillRect(w/2 - 50, h/2 + 150, 100, 40);
+				draw.fillStyle = "#FF00C8";
+				draw.fillText("submit", w/2, h/2 + 180);
+
+				k.addEventListener("click", function(evt){
+					let x, y;
+					x = evt.clientX - k.getBoundingClientRect().left;
+					y = evt.clientY - k.getBoundingClientRect().top;
+					if(submitted==0 && x>=w/2-50 && x<=w/2+50 && y>=h/2+150 && y<= h/2+190 && contesttime.value()>=0 && contesttime.value()<=1440){
+						settime = 60 * parseFloat(contesttime.value());
+						setname = contestname.value();
+						contestname.destroy();
+						contesttime.destroy();
+						submitted = 1;
+						playsound.play();
+						playsound.pause();
+						draw.fillStyle = "#000000";
+						draw.fillRect(0,0,w,h);
+						starttimer();
+					}
+				});
+
+			}
+
+			function starttimer(){
+				//timer page
+				alert("x");
+				for(let i = settime; i>=0; i--){
+					setTimeout(function(){
+
+						//remaining i seconds;
+						h0 = Math.floor(i/3600);
+						m0 = Math.floor((i-3600*h0)/60);
+						s0 = i - 3600*h0 - 60*m0;
+						h1 = String(h0);
+						if(m0<10){m1 = "0" + String(m0);}
+						else{m1 = String(m0);}
+						if(s0<10){s1 = "0" + String(s0);}
+						else{s1 = String(s0);}
+						disp = h1 + ":" + m1 + ":" + s1;
+
+						c0 = i/settime;
+						c1 = "rgb(" + String(Math.floor(255*c0)) + "," + String(Math.floor(200-200*c0)) + "," + String(Math.floor(255-55*c0)) + ")"
+						draw.fillStyle = "#000000";
+						draw.fillRect(0,0,w,h);
+						draw.fillStyle = c1;
+						draw.font = "200px Arial";
+						draw.fillText(disp, w/2, h/2+50);
+						draw.fillStyle = "#FF00C8";
+						draw.font = "50px Arial";
+						draw.fillText(setname, w/2, h/2-200);
+						
+					}, 1000 * (settime - i));
+				}
+				endtimer();
+			}
+
+			function endtimer(){
+				//timer ended
+
+				setTimeout(function(){
+					draw.fillStyle = "#000000";
+					draw.fillRect(0,0,w,h);
+					draw.fillStyle = "#FF00C8";
+					draw.font = "100px Arial";
+					draw.fillText("contest has ended", w/2, h/2);
+					playsound.play();
+				}, 1000*settime + 1000);
+
+			}
+
+			userinput();
+
+		</script>
+	</body>
+</html>
