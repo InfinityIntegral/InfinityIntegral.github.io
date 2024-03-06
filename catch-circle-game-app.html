@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-SU">
+	<head>
+		<meta charset="utf-8">
+		<title>catch the circle</title>
+		<script type="text/javascript" src="CanvasInput.js"></script>
+		<link rel="icon" type="image/x-icon" href="favicon.ico"></link>
+		<style>
+			body{
+				background-color: #FF00C8;
+				color: #00C8FF;
+				font-family: "Arial";
+				overflow: hidden;
+				line-height: 1.2;
+				vertical-align: baseline;
+				overflow: hidden;
+       	     }
+		</style>
+	</head>
+	<body>
+		<canvas style="width:100%;height:window.innerHeight" id="x"></canvas>
+		<script>
+			const k = document.getElementById("x");
+			const draw = document.getElementById("x").getContext("2d");
+			draw.canvas.width = window.innerWidth;
+			draw.canvas.height = window.innerHeight;
+			const w = draw.canvas.width;
+			const h = draw.canvas.height;
+			let t0, t1, score, cx, cy, cr, mousex, mousey, i0, ct, cv, scoretext, dist, endtext, t2;
+			let gamestarted = 0;
+			let fps;
+
+			function startscreen(){
+				draw.fillStyle = "#00C8FF";
+				draw.textAlign = "center";
+				draw.font = "100px Arial";
+				draw.fillText("catch the circle", w/2, h/4);
+				draw.font = "25px Arial";
+				draw.fillText("a video game programmed by Infinity Integral", w/2, h/4+30);
+				draw.fillRect(w/2-150, h/2-30, 300, 60);
+				draw.fillStyle = "#FF00C8";
+				draw.font = "50px Arial";
+				draw.fillText("start game",w/2,h/2+10);
+
+				k.addEventListener("click", function(evt){
+					mousex = evt.clientX - k.getBoundingClientRect().left;
+					mousey = evt.clientY - k.getBoundingClientRect().top;
+					if(gamestarted==0 && mousex>=w/2-150 && mousex<=w/2+150 && mousey>=h/2-30 && mousey<= h/2+30){
+						gamestarted = 1;
+						t0 = Date.now();
+						score = 0;
+						cx = w/2;
+						cy = h/2;
+						cr = 100;
+						i0 = 0;
+						gameplay();
+					}
+				});
+			}
+
+			function gameplay(){
+				fps = setInterval(gamedisplay, 20);
+				k.addEventListener("click", function(evt){
+					mousex = evt.clientX - k.getBoundingClientRect().left;
+					mousey = evt.clientY - k.getBoundingClientRect().top;
+					dist = (cx-mousex)*(cx-mousex) + (cy-mousey)*(cy-mousey);
+					if(gamestarted==1 && dist<=cr*cr){
+						cr--;
+						score++;
+						if(score==100){
+							t1 = Date.now();
+							clearInterval(fps);
+							endscreen();
+						}
+					}
+				});
+			}
+
+			function gamedisplay(){
+				if(i0%50==0){ct = 2*Math.PI*Math.random();}
+				cv = 10*Math.random();
+				cx += Math.floor(cv*Math.cos(ct));
+				cy += Math.floor(cv*Math.sin(ct));
+				if (cx < 0){cx += w;}
+				else if (cx > w){cx -= w;}
+				if (cy < 0){cy += h;}
+				else if (cy > h){cy -= h;}
+
+				draw.fillStyle = "#FF00C8";
+				draw.fillRect(0,0,w,h);
+				draw.fillStyle = "#00C8FF";
+				draw.beginPath();
+				draw.arc(cx,cy,cr,0,2*Math.PI);
+				draw.fill();
+
+				draw.textAlign = "left";
+				draw.font = "20px Arial";
+				scoretext = "your score: " + score;
+				draw.fillText(scoretext, 0,20);
+
+				i0++;
+			}
+
+			function endscreen(){
+				draw.font = "50px Arial";
+				draw.textAlign = "center";
+				draw.fillStyle = "#FF00C8";
+				draw.fillRect(0,0,w,h);
+				draw.fillStyle = "#00C8FF";
+				draw.fillText("You have won the game",w/2,h/4);
+				t2 = (t1-t0)/1000;
+				endtext = "You took " + t2 + " seconds"
+				draw.fillText(endtext,w/2,h/2);
+				draw.fillText("To replay, refresh this page.",w/2,3*h/4);
+			}
+
+			startscreen();
+
+		</script>
+	</body>
+</html>
