@@ -52,8 +52,20 @@
 			let t=0;
 			let posfx, posfy, canmove;
 			let gamelost = 0;
-			let time0, time1, wintime, wintext;
 			let coord;
+			let prog = " ";
+			let cookietext;
+
+			cookietext = document.cookie;
+			if(cookietext.length > 0){
+				for(let i=2; i<4; i++){
+					if(cookietext[i] != ';' && cookietext[i] != ' '){
+						prog += cookietext[i];
+					}
+				}
+			}
+			if (prog==" "){prog = 0;}
+			else {prog = parseInt(prog,10);}
 
 			const eventfunc0 = function(evt){
 				mousex = evt.clientX - k.getBoundingClientRect().left;
@@ -65,10 +77,9 @@
 					display100();
 				}
 				else if (gamestate==-1 && mousex<=100 && mousey<=100){
-					gamestate = 0;
-					time0 = Date.now();
+					gamestate = prog - 1;
 					k.removeEventListener("click",eventfunc0);
-					gameplay();
+					wingame();
 				}
 			}
 
@@ -223,10 +234,9 @@
     				mousex = evt.clientX - k.getBoundingClientRect().left;
     				mousey = evt.clientY - k.getBoundingClientRect().top;
     				if(gamestate==103 && mousex>=w-300 && mousex<=w-100 && mousey>=h-140 && mousey<=h-100){
-        				gamestate = 0;
+        				gamestate = prog - 1;
         				k.removeEventListener("click",eventfunc103);
-					time0 = Date.now()
-        				gameplay();
+        				wingame();
     				}
 			}
 
@@ -1095,8 +1105,6 @@
 					}
 				}
 
-				// bug in display: close objects appear larger than they should
-
 				//initialise display
 				draw.fillStyle = "#000000";
 				draw.fillRect(0,0,w,h/2);
@@ -1524,13 +1532,10 @@
 					draw.fillStyle = "#00C8FF";
 					draw.font = "100px Arial";
 					draw.fillText("Mission successful",w/2,h/2);
-					draw.font = "30px Arial";
-					time1 = Date.now();
-					wintime = (time1 - time0)/1000;
-					wintext = "completed mission in " + wintime + " seconds";
-					draw.fillText(wintext,w/2,h/2+30);
 
 				}
+				document.cookie = "x=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+				document.cookie = "x=" + gamestate + "; expires=Mon, 01 Jan 2970 00:00:00 UTC";
 
 				if (gamestate>=0 && gamestate<=30){gameplay();}
 			}
