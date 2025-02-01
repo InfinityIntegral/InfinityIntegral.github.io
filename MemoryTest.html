@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Memory Test</title>
+</head>
+<body>
+    <h1>WebAssembly Memory Test</h1>
+    <button id="startTest">Start Test</button>
+    <p id="output">Click the button</p>
+
+    <script>
+        async function loadWasmModule() {
+            try {
+                const response = await fetch("memory_test.wasm");
+                const buffer = await response.arrayBuffer();
+                const wasmModule = await WebAssembly.instantiate(buffer);
+                return wasmModule.instance.exports;
+            } catch (error) {
+                updateOutputText("Failed to load WebAssembly module.");
+                return null;
+            }
+        }
+        async function tryAllocateMemory(wasmExports, n) {
+            try {
+                wasmExports.growMemory(n);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+        function updateOutputText(text) {
+            const outputElement = document.getElementById("output");
+            outputElement.textContent = text;
+        }
+        document.getElementById("startTest").addEventListener("click", async () => {
+            const wasmExports = await loadWasmModule();
+            if (!wasmExports) {
+                updateOutputText("Failed to load WebAssembly module.");
+                return;
+            }
+            let allocatedPages = 0;
+            updateOutputText("Testing... Please wait.");
+            while (await tryAllocateMemory(wasmExports, 1)) {
+                allocatedPages++;
+                updateOutputText(`${allocatedPages} pages allocated...`);
+            }
+            updateOutputText(`Max memory allocated: ${allocatedPages} pages.`);
+        });
+    </script>
+</body>
+</html>
