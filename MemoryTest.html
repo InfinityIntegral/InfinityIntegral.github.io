@@ -8,7 +8,7 @@
 <body>
     <h1>WebAssembly Memory Test</h1>
     <button id="startTest">Start Test</button>
-    <p id="output">Click the button</p>
+    <p id="output">Click the button to test maximum allocatable memory.</p>
 
     <script>
         async function loadWasmModule() {
@@ -22,6 +22,7 @@
                 return null;
             }
         }
+
         async function tryAllocateMemory(wasmExports, n) {
             try {
                 wasmExports.growMemory(n);
@@ -30,23 +31,32 @@
                 return false;
             }
         }
+
         function updateOutputText(text) {
-            const outputElement = document.getElementById("output");
-            outputElement.textContent = text;
+            document.getElementById("output").textContent = text;
         }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         document.getElementById("startTest").addEventListener("click", async () => {
             const wasmExports = await loadWasmModule();
             if (!wasmExports) {
                 updateOutputText("Failed to load WebAssembly module.");
                 return;
             }
-            let allocatedPages = 0;
+
+            let allocatedMB = 0;
             updateOutputText("Testing... Please wait.");
-            while (await tryAllocateMemory(wasmExports, 1)) {
-                allocatedPages++;
-                updateOutputText(`${allocatedPages} pages allocated...`);
+
+            while (await tryAllocateMemory(wasmExports, 16)) {
+                allocatedMB++;
+                updateOutputText(`${allocatedMB} MB allocated...`);
+                await delay(1000);
             }
-            updateOutputText(`Max memory allocated: ${allocatedPages} pages.`);
+
+            updateOutputText(`Max memory allocated: ${allocatedMB} MB.`);
         });
     </script>
 </body>
