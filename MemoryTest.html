@@ -53,7 +53,7 @@
             while (await tryAllocateMemory(wasmExports, 16)) {
                 allocatedMB++;
                 updateOutputText(`${allocatedMB} MB allocated...`);
-                await delay(1000);
+                await delay(100);
             }
 
             updateOutputText(`Max memory allocated: ${allocatedMB} MB.`);
